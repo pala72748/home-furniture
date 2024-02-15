@@ -101,11 +101,17 @@ router.get('/getproduct/:product_url', async (req, res) => {
 });
 
 router.get('/getproduct/:product_cat', async (req, res) => {
+  
   try {
-    const product = await Product.findOne({ product_cat: req.params.product_cat }).populate('product_cat'); // Changed "findByOne" to "findOne"
-    res.status(200).json(product);
+    const products = await Product.find({ cat_name: req.params.product_cat }).populate('product_cat');
+    console.log(products);
+    if (!products || products.length === 0) {
+      return res.json({ viewsts: 1, msg: 'No products found for this category' });
+    }
+    
+    res.status(200).json({ viewsts: 0, products });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ viewsts: 1, msg: 'Internal Server Error' });
   }
 });
