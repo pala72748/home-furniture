@@ -1,6 +1,6 @@
 const Admin = require('../models/admin');
 const Admintoken = require('../models/admintoken');
-const BlogCategory = require('../models/blogCategory'); // Correct the case here
+const BlogCategory = require('../models/BlogCategory'); // Corrected the case here
 const multer = require('multer');
 const path = require('path');
 const express = require('express');
@@ -8,7 +8,6 @@ const router = express.Router();
 const shortid = require('shortid');
 const fs = require('fs').promises; // Import fs.promises for async file operations
 const cloudinary = require('cloudinary').v2;
-
 
 cloudinary.config({
     cloud_name: "dlchkufsu",
@@ -39,7 +38,7 @@ router.post('/category', uploadcat.single('cover'), async (req, res) => {
         const newCat = new BlogCategory({
             blog_cat_name,
             blog_url,
-            cover:result.secure_url,
+            cover: result.secure_url,
         });
 
         await newCat.save();
@@ -102,7 +101,7 @@ router.delete('/deletecategory/:id', async (req, res) => {
 router.put('/updatecategory/:id', uploadcat.single('cover'), async (req, res) => {
     try {
         const { blog_cat_name, blog_url } = req.body;
-        let cover
+        let cover;
 
         // Check if there's a file uploaded
         if (req.file) {
