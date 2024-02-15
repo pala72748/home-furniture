@@ -154,7 +154,7 @@ router.delete('/deleteproduct/:id', async (req, res) => {
   }
 });
 
-router.patch('/updateproduct/:id', uploadProduct.single('cover'), async (req, res) => {
+router.put('/updateproduct/:id', uploadProduct.single('cover'), async (req, res) => {
   try {
     const { product_name, product_url, product_desc, product_short_desc } = req.body;
     let updateFields = { product_name, product_url, product_desc, product_short_desc };
