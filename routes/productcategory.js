@@ -7,6 +7,13 @@ const express = require('express');
 const router = express.Router();
 const shortid = require('shortid');
 const fs = require('fs')
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: "dlchkufsu",
+    api_key: "492799945774271",
+    api_secret: "RUp7r-r7R3H_IccLn-YdBd3Akhw"
+});
 
 const category = multer.diskStorage({
     destination: './image/category',
