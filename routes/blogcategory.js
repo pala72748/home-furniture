@@ -39,7 +39,7 @@ router.post('/category', uploadcat.single('cover'), async (req, res) => {
         const newCat = new BlogCategory({
             blog_cat_name,
             blog_url,
-            cover
+            cover:result.secure_url,
         });
 
         await newCat.save();
