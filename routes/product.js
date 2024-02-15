@@ -1,6 +1,6 @@
 const Admin = require('../models/admin');
 const AdminToken = require('../models/admintoken'); // Corrected case here
-const Product = require('../models/product'); // Corrected case here
+const Product = require('../models/Product'); // Corrected case here
 const multer = require('multer');
 const path = require('path');
 const express = require('express');
