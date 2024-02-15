@@ -32,7 +32,7 @@ const uploadcat = multer({
 router.post('/category', uploadcat.single('cover'), async (req, res) => {
     try {
         const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'blog_images', // Specify folder in Cloudinary where images will be stored
+            folder: 'blog_cat_images', // Specify folder in Cloudinary where images will be stored
         });
         const { blog_cat_name, blog_url } = req.body;
 
@@ -99,10 +99,19 @@ router.delete('/deletecategory/:id', async (req, res) => {
     }
 });
 
-router.patch('/updatecategory/:id', uploadcat.single('cover'), async (req, res) => {
+router.put('/updatecategory/:id', uploadcat.single('cover'), async (req, res) => {
     try {
         const { blog_cat_name, blog_url } = req.body;
-        const cover = req.file ? req.file.filename : null;
+        let cover
+
+        // Check if there's a file uploaded
+        if (req.file) {
+            // Upload image to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'blog_cat_images', // Specify folder in Cloudinary where images will be stored
+            });
+            cover = result.secure_url; // Store secure URL of uploaded image from Cloudinary
+        }
 
         const updatedCategory = await BlogCategory.findByIdAndUpdate(
             req.params.id,
