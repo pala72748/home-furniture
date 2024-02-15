@@ -129,7 +129,7 @@ router.delete('/deleteblog/:id', async (req, res) => {
   }
 });
 
-router.patch('/updateblog/:id', uploadcat.single('cover'), async (req, res) => {
+router.put('/updateblog/:id', uploadcat.single('cover'), async (req, res) => {
   try {
     const { blog_name, blog_url, blog_desc } = req.body;
     let coverUrl;
