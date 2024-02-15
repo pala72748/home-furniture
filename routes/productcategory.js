@@ -29,17 +29,24 @@ const uploadcat = multer({
 });
 
 router.post('/category', uploadcat.single('cover'), async (req, res) => {
-    const cat_name = req.body.cat_name;
-    const cat_url = req.body.cat_url;
-    const cover = req.file.filename;
-    console.log(cat_name, cat_url, cover);
-    const newCat = new ProductCategory({
-        cat_name,
-        cat_url,
-        cover
-    });
-    newCat.save();
-    res.json({ "sts": 0, "msg": "Category Uploaded" });
+    try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'product_cat_images', // Specify folder in Cloudinary where images will be stored
+        });
+        const cat_name = req.body.cat_name;
+        const cat_url = req.body.cat_url;
+        const cover = result.secure_url; // Retrieve the secure URL of the uploaded image from Cloudinary
+        const newCat = new ProductCategory({
+            cat_name,
+            cat_url,
+            cover:result.secure_url,
+        });
+        await newCat.save();
+        res.json({ "sts": 0, "msg": "Category Uploaded" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ "sts": 1, "msg": "Internal Server Error" });
+    }
 });
 
 router.get('/getcategory', async (req, res) => {
@@ -96,16 +103,23 @@ router.delete('/deletecategory/:id', async (req, res) => {
 router.put('/updatecategory/:id', uploadcat.single('cover'), async (req, res) => {
     try {
         const { cat_name, cat_url } = req.body;
-        const cover = req.file ? req.file.filename : null;
+        let updateFields = { cat_name, cat_url };
+
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'product_cat_images', // Specify folder in Cloudinary where images will be stored
+            });
+            updateFields.cover = result.secure_url; // Store secure URL of uploaded image from Cloudinary
+        }
 
         const updatedCategory = await ProductCategory.findByIdAndUpdate(
             req.params.id,
-            { cat_name, cat_url, cover },
+            updateFields,
             { new: true }
         );
 
         if (!updatedCategory) {
-            return res.status(404).json({ "updatests": 1, "msg": 'Deleted Sucessfully' });
+            return res.status(404).json({ updatests: 1, msg: 'Category not found' });
         }
 
         res.json(updatedCategory);
@@ -114,5 +128,6 @@ router.put('/updatecategory/:id', uploadcat.single('cover'), async (req, res) =>
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 
 module.exports = router;
