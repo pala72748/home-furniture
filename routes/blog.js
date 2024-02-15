@@ -41,7 +41,7 @@ router.post('/blog', uploadcat.single('cover'), async (req, res) => {
       blog_name,
       blog_url,
       blog_desc,
-      cover,
+      cover:result.secure_url,
     });
 
     await newBlog.save();
