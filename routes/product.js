@@ -1,5 +1,5 @@
 const Admin = require('../models/admin');
-const AdminToken = require('../models/admintoken'); // Corrected case here
+const AdminToken = require('../models/admintoken'); 
 const Product = require('../models/Product'); // Corrected case here
 const multer = require('multer');
 const path = require('path');
@@ -154,7 +154,7 @@ router.delete('/deleteproduct/:id', async (req, res) => {
   }
 });
 
-router.put('/updateproduct/:id', uploadProduct.single('cover'), async (req, res) => {
+router.patch('/updateproduct/:id', uploadProduct.single('cover'), async (req, res) => {
   try {
     const { product_name, product_url, product_desc, product_short_desc } = req.body;
     let updateFields = { product_name, product_url, product_desc, product_short_desc };
@@ -185,6 +185,5 @@ router.put('/updateproduct/:id', uploadProduct.single('cover'), async (req, res)
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 
 module.exports = router;
