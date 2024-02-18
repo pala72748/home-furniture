@@ -89,22 +89,7 @@ router.get('/getproduct', async (req, res) => {
     res.status(500).json({ viewsts: 1, msg: 'Internal Server Error' });
   }
 });
-router.get('/getproduct/:id', async (req, res) => {
- 
-  try {
-    const {id} = req.body;
-    console.log(req.params.id);
-    const products = await Product.find({ product_cat: req.params.id }).populate('product_cat');
-    
-    if (!products || products.length === 0) {
-      return res.json({ viewsts: 1, msg: 'No products found for this category' });
-    }
-    res.status(200).json({ viewsts: 0, products });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ viewsts: 1, msg: 'Internal Server Error' });
-  }
-});
+
 router.get('/getproduct/:product_url', async (req, res) => {
   try {
     const product = await Product.findOne({ product_url: req.params.product_url }).populate('product_cat'); // Changed "findByOne" to "findOne"
