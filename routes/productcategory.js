@@ -62,7 +62,22 @@ router.get('/getcategory', async (req, res) => {
         res.status(500).json({ "viewsts": 1, "msg": "Internal Server Error" });
     }
 });
+router.get('/getcategory/:cat_url', async (req, res) => {
 
+    try {
+        const cat = await ProductCategory.find({ cat_url: req.params.cat_url });
+        const product = await Product.find({product_cat:cat[0]._id});
+        const count = cat.length
+        if (!cat || cat.length === 0) {
+            return res.json({ viewsts: 1, msg: 'No products found for this category' });
+        }
+        // console.log(product);
+        res.status(200).json({ viewsts: 0, product, count });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ viewsts: 1, msg: 'Internal Server Error' });
+    }
+});
 router.get('/getcategory/:id', async (req, res) => {
     console.log(req.body);
     try {
