@@ -1,6 +1,7 @@
 const Admin = require('../models/admin');
 const Admintoken = require('../models/admintoken');
 const BlogCategory = require('../models/blogCategory'); // Corrected the case here
+const Blog = require('../models/Blog')
 const multer = require('multer');
 const path = require('path');
 const express = require('express');
@@ -63,7 +64,22 @@ router.get('/getcategory', async (req, res) => {
         res.status(500).json({ "viewsts": 1, "msg": "Internal Server Error" });
     }
 });
+router.get('/getcategory/:name', async (req, res) => {
 
+    try {
+        const cat = await BlogCategory.find({ blog_url: req.params.name });
+        const blog = await Blog.find({blog_cat:cat[0]._id});
+        const count = cat.length
+        if (!cat || cat.length === 0) {
+            return res.json({ viewsts: 1, msg: 'No products found for this category' });
+        }
+        // console.log(product);
+        res.status(200).json({ viewsts: 0, blog, count });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ viewsts: 1, msg: 'Internal Server Error' });
+    }
+});
 router.get('/getcategory/:id', async (req, res) => {
     try {
         const cat = await BlogCategory.findById(req.params.id);
