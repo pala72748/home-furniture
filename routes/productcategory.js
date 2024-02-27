@@ -79,10 +79,12 @@ router.get('/getcategory/:name', async (req, res) => {
         res.status(500).json({ viewsts: 1, msg: 'Internal Server Error' });
     }
 });
-router.get('/getcategory/:id', async (req, res) => {
+router.get('/getcategory/', async (req, res) => {
     console.log(req.body);
+     const aid = req.params.aid; // Accessing 'aid' from the route parameters
+   console.log("Requested product ID:", aid);
     try {
-        const cat = await ProductCategory.findById(req.params.id);
+        const cat = await ProductCategory.findById(req.params.aid);
         res.status(200).json(cat);
     } catch (error) {
         console.log(error);
