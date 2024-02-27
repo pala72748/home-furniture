@@ -84,7 +84,7 @@ router.get('/getcategory/', async (req, res) => {
      const aid = req.params.aid; // Accessing 'aid' from the route parameters
    console.log("Requested product ID:", aid);
     try {
-        const cat = await ProductCategory.findById(req.params.aid);
+        const cat = await ProductCategory.findById(aid);
         res.status(200).json(cat);
     } catch (error) {
         console.log(error);
